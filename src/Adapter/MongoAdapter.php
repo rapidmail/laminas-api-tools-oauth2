@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\ApiTools\OAuth2\Adapter;
 
-use Laminas\Crypt\Password\Bcrypt;
 use MongoClient;
 use OAuth2\Storage\Mongo as OAuth2Mongo;
 
@@ -21,22 +20,6 @@ class MongoAdapter extends OAuth2Mongo
 {
     /** @var int */
     protected $bcryptCost = 10;
-
-    /** @var Bcrypt */
-    protected $bcrypt;
-
-    /**
-     * @return Bcrypt
-     */
-    public function getBcrypt()
-    {
-        if (null === $this->bcrypt) {
-            $this->bcrypt = new Bcrypt();
-            $this->bcrypt->setCost($this->bcryptCost);
-        }
-
-        return $this->bcrypt;
-    }
 
     /**
      * @param int $value
@@ -65,7 +48,7 @@ class MongoAdapter extends OAuth2Mongo
      */
     protected function createBcryptHash(&$string): void
     {
-        $string = $this->getBcrypt()->create($string);
+        $string = password_hash($string, PASSWORD_BCRYPT, ['cost' => $this->bcryptCost]);
     }
 
     /**
@@ -77,7 +60,7 @@ class MongoAdapter extends OAuth2Mongo
      */
     protected function verifyHash($check, $hash)
     {
-        return $this->getBcrypt()->verify($check, $hash);
+        return password_verify($check, $hash);
     }
 
     /**

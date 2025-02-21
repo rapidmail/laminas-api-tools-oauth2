@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\ApiTools\OAuth2\Adapter;
 
-use Laminas\Crypt\Password\Bcrypt;
 use OAuth2\Storage\Pdo as OAuth2Pdo;
 
 use function func_num_args;
@@ -18,22 +17,6 @@ class PdoAdapter extends OAuth2Pdo
 {
     /** @var int */
     protected $bcryptCost = 10;
-
-    /** @var Bcrypt */
-    protected $bcrypt;
-
-    /**
-     * @return Bcrypt
-     */
-    public function getBcrypt()
-    {
-        if (null === $this->bcrypt) {
-            $this->bcrypt = new Bcrypt();
-            $this->bcrypt->setCost($this->bcryptCost);
-        }
-
-        return $this->bcrypt;
-    }
 
     /**
      * @param int $value
@@ -62,7 +45,7 @@ class PdoAdapter extends OAuth2Pdo
      */
     protected function createBcryptHash(&$string): void
     {
-        $string = $this->getBcrypt()->create($string);
+        $string = password_hash($string, PASSWORD_BCRYPT, ['cost' => $this->bcryptCost]);
     }
 
     /**
@@ -74,7 +57,7 @@ class PdoAdapter extends OAuth2Pdo
      */
     protected function verifyHash($check, $hash)
     {
-        return $this->getBcrypt()->verify($check, $hash);
+        return password_verify($check, $hash);
     }
 
     /**

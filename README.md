@@ -129,8 +129,7 @@ CREATE TABLE oauth_jwt (
 
 For security reasons, we encrypt the fields `client_secret` (table
 `oauth_clients`) and `password` (table `oauth_users`) using the
-[bcrypt](http://en.wikipedia.org/wiki/Bcrypt) algorithm (via the class
-[Laminas\Crypt\Password\Bcrypt](https://getlaminas.org/manual/2.2/en/modules/laminas.crypt.password.html#bcrypt)).
+[bcrypt](http://en.wikipedia.org/wiki/Bcrypt) algoritm with the builtin php function password_hash(). 
 
 In order to configure the api-tools-oauth2 module for database access, you need to copy
 the file `config/oauth2.local.php.dist` to `config/autoload/oauth2.local.php` in
@@ -205,8 +204,7 @@ into the oauth2 database. If you are using the SQLite test database, you don't
 need to add a `client_id`; just use the default "testclient"/"testpass" account.
 
 Because we encrypt the password using the `bcrypt` algorithm, you need to
-encrypt the password using the [Laminas\Crypt\Password\Bcrypt](https://getlaminas.org/manual/2.2/en/modules/laminas.crypt.password.html#bcrypt)
-class from Laminas. We provided a simple script in `/bin/bcrypt.php` to
+encrypt the password using the builtin PHP function password_hash(). We provided a simple script in `/bin/bcrypt.php` to
 generate the hash value of a user's password. You can use this tool from the
 command line, with the following syntax:
 

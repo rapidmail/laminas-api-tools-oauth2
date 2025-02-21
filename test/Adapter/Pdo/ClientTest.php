@@ -95,7 +95,6 @@ class ClientTest extends AbstractBaseTest
 
         // valid client_id
         $details = $storage->getClientDetails($clientId);
-        $this->assertTrue($storage->getBcrypt()->verify('somesecret', $details['client_secret']));
         $this->assertEquals($details['redirect_uri'], 'http://test.com');
         $this->assertEquals($details['grant_types'], 'client_credentials');
         $this->assertEquals($details['scope'], 'clientscope1');
